@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shoplix</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --teal:#0f6b63; --teal-dark:#0a4f49; --teal-soft:#e3f1ef;
+  --marigold:#f2a900; --coral:#e4572e;
+  --paper:#f6f7f5; --white:#ffffff; --line:#dde3e1;
+  --text:#22303a; --muted:#66757e;
+  --radius:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;background:var(--paper);color:var(--text);line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+img{max-width:100%;display:block}
+:focus-visible{outline:3px solid var(--marigold);outline-offset:2px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+.top{background:var(--teal);color:#fff;position:sticky;top:0;z-index:20}
+.top .wrap{display:flex;align-items:center;gap:20px;padding-top:12px;padding-bottom:12px}
+.logo{font-weight:800;font-size:24px;letter-spacing:-.5px;white-space:nowrap}
+.logo span{color:var(--marigold)}
+.search{flex:1;display:flex;max-width:620px}
+.search input{flex:1;border:0;padding:11px 14px;border-radius:var(--radius) 0 0 var(--radius);min-width:0;background:#fff;color:var(--text)}
+.search button{border:0;background:var(--marigold);color:#2a2000;font-weight:700;padding:0 18px;border-radius:0 var(--radius) var(--radius) 0}
+.cart-link{display:flex;align-items:center;gap:8px;font-weight:600;white-space:nowrap}
+.cart-link b{background:var(--marigold);color:#2a2000;border-radius:99px;min-width:22px;height:22px;display:inline-grid;place-items:center;font-size:12px;padding:0 6px}
+.nav{background:var(--white);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;gap:4px;overflow-x:auto}
+.nav a{padding:12px 14px;font-weight:600;font-size:14px;color:var(--muted);white-space:nowrap;border-bottom:3px solid transparent}
+.nav a:hover{color:var(--teal)}
+.nav a.on{color:var(--teal);border-bottom-color:var(--teal)}
+.hero{background:var(--teal-soft);border-radius:14px;margin:20px 0;padding:36px 32px;display:grid;grid-template-columns:1.2fr 1fr;gap:24px;align-items:center}
+.hero h1{font-size:clamp(26px,4vw,40px);line-height:1.15;letter-spacing:-.8px;color:var(--teal-dark);margin-bottom:10px}
+.hero p{color:var(--muted);max-width:44ch;margin-bottom:18px}
+.cats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.cat{background:#fff;border-radius:var(--radius);padding:16px;font-weight:700;border-left:6px solid var(--c);transition:transform .15s}
+.cat:hover{transform:translateY(-2px)}
+.cat small{display:block;font-weight:500;color:var(--muted)}
+.perks{display:flex;gap:24px;flex-wrap:wrap;margin-bottom:8px;font-size:14px;color:var(--muted)}
+.perks b{color:var(--text)}
+.btn{display:inline-block;border:2px solid var(--teal);background:var(--teal);color:#fff;font-weight:700;padding:11px 22px;border-radius:var(--radius);text-align:center}
+.btn:hover{background:var(--teal-dark);border-color:var(--teal-dark)}
+.btn.alt{background:#fff;color:var(--teal)}
+.btn.alt:hover{background:var(--teal-soft)}
+.btn.buy{background:var(--marigold);border-color:var(--marigold);color:#2a2000}
+.btn.buy:hover{filter:brightness(.95)}
+.head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:24px 0 14px;flex-wrap:wrap}
+.head h2{font-size:22px;letter-spacing:-.3px}
+.head select{border:1px solid var(--line);background:#fff;padding:8px 10px;border-radius:8px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;transition:box-shadow .15s}
+.card:hover{box-shadow:0 6px 18px rgba(15,60,55,.12)}
+.card .im{position:relative;aspect-ratio:1/1;background:var(--teal-soft)}
+.card .im img{width:100%;height:100%;object-fit:cover}
+.badge{position:absolute;top:10px;left:10px;background:var(--coral);color:#fff;font-size:12px;font-weight:700;padding:3px 8px;border-radius:6px}
+.card .bd{padding:12px 14px 14px}
+.card h3{font-size:15px;font-weight:600;margin-bottom:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.price{font-weight:800;color:var(--teal);font-size:18px}
+.old{color:var(--muted);text-decoration:line-through;font-size:13px;margin-left:6px;font-weight:500}
+.meta{font-size:12px;color:var(--muted);margin-top:4px}
+.star{color:var(--marigold)}
+.crumbs{font-size:13px;color:var(--muted);margin:18px 0}
+.crumbs a:hover{color:var(--teal)}
+.prod{display:grid;grid-template-columns:1fr 1fr;gap:32px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:24px}
+.gal .main{aspect-ratio:1/1;border-radius:var(--radius);overflow:hidden;background:var(--teal-soft)}
+.gal .main img{width:100%;height:100%;object-fit:cover}
+.thumbs{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
+.thumbs button{width:72px;height:72px;border:2px solid var(--line);border-radius:8px;overflow:hidden;padding:0;background:none}
+.thumbs button.on{border-color:var(--teal)}
+.thumbs img{width:100%;height:100%;object-fit:cover}
+.info h1{font-size:26px;line-height:1.2;letter-spacing:-.5px;margin-bottom:8px}
+.info .price{font-size:30px}
+.info .old{font-size:16px}
+.row{display:flex;gap:12px;align-items:center;margin:18px 0;flex-wrap:wrap}
+.qty{display:inline-flex;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.qty button{width:40px;border:0;background:var(--paper);font-size:18px}
+.qty input{width:48px;text-align:center;border:0;border-left:1px solid var(--line);border-right:1px solid var(--line);-moz-appearance:textfield}
+.qty input::-webkit-outer-spin-button,.qty input::-webkit-inner-spin-button{-webkit-appearance:none}
+.info h3{margin:22px 0 6px;font-size:16px}
+.info ul{padding-left:20px;color:var(--muted)}
+.info p.d{color:var(--muted)}
+.box{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px}
+.two{display:grid;grid-template-columns:1.6fr 1fr;gap:20px;align-items:start}
+.line{display:grid;grid-template-columns:72px 1fr auto;gap:14px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line)}
+.line:last-child{border-bottom:0}
+.line img{width:72px;height:72px;object-fit:cover;border-radius:8px}
+.line .x{background:none;border:0;color:var(--coral);font-size:13px;font-weight:600;margin-top:4px;padding:0}
+.sum div{display:flex;justify-content:space-between;padding:6px 0}
+.sum .tot{font-weight:800;font-size:18px;border-top:1px solid var(--line);margin-top:6px;padding-top:12px}
+.f{display:grid;gap:12px}
+.f label{font-size:13px;font-weight:600;display:grid;gap:4px}
+.f input,.f textarea,.f select{border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:#fff}
+.pay{border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:14px;display:flex;gap:8px;align-items:center}
+.pay.off{color:var(--muted);background:var(--paper)}
+.empty{text-align:center;padding:48px 16px}
+.empty p{color:var(--muted);margin:6px 0 18px}
+.adminbar{background:var(--coral);color:#fff;font-size:13px;font-weight:600}
+.adminbar .wrap{display:flex;justify-content:space-between;gap:12px;padding-top:6px;padding-bottom:6px;flex-wrap:wrap}
+.adminbar a,.adminbar button{color:#fff;background:none;border:0;margin-left:14px;text-decoration:underline;font-weight:600;font-size:13px}
+.tabs{display:flex;gap:8px;margin:20px 0 14px;flex-wrap:wrap}
+.mini{padding:6px 12px;font-size:13px}
+.scroll{overflow-x:auto}
+.tbl{width:100%;border-collapse:collapse}
+.tbl td,.tbl th{padding:10px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle;font-size:14px}
+.tbl img{width:48px;height:48px;object-fit:cover;border-radius:6px}
+.tag{background:var(--marigold);color:#2a2000;font-size:11px;font-weight:700;padding:2px 8px;border-radius:99px;margin-left:6px}
+footer{background:var(--teal-dark);color:#cfe3e0;margin-top:48px;padding:28px 0;font-size:14px}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+footer b{color:#fff}
+#toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);background:var(--text);color:#fff;padding:12px 18px;border-radius:10px;opacity:0;pointer-events:none;transition:.2s;z-index:50;font-weight:600}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+@media (max-width:900px){
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .hero,.prod,.two{grid-template-columns:1fr}
+  .top .wrap{flex-wrap:wrap;gap:10px}
+  .search{order:3;flex-basis:100%;max-width:none}
+  .cart-link{margin-left:auto}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<div id="adminBar"></div>
+<header>
+  <div class="top">
+    <div class="wrap">
+      <a class="logo" href="#/" aria-label="Shoplix home">Shop<span>lix</span></a>
+      <form class="search" id="searchForm" role="search">
+        <input id="q" type="search" placeholder="Search products" aria-label="Search products">
+        <button type="submit">Search</button>
+      </form>
+      <a class="cart-link" href="#/admin" style="margin-left:auto;border:1px solid rgba(255,255,255,.5);border-radius:8px;padding:6px 12px;font-size:14px">Admin</a>
+      <a class="cart-link" href="#/cart">Cart <b id="cartCount">0</b></a>
+    </div>
+  </div>
+  <nav class="nav" aria-label="Categories"><div class="wrap" id="nav"></div></nav>
+</header>
+
+<main class="wrap" id="app"></main>
+
+<footer>
+  <div class="wrap">
+    <div><b>Shoplix</b><br>Everyday essentials, delivered to your door.</div>
+    <div>Cash on delivery &middot; 7-day returns<br>Support: hello@shoplix.example<br><a href="#/admin">Admin</a></div>
+  </div>
+</footer>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+const SUPABASE_URL = "https://jfuatmwqyqrofyxqnywkf.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_C7XoIiEdDH6vcWonjlqFcg_4EPEx6-C";
+const ADMIN_PASSWORD = "1234";
+
+const STORE = { name: "Shoplix", currency: "৳", deliveryFee: 60, freeDeliveryOver: 2000 };
+const CATEGORIES = [
+  { slug: "lifestyle",   name: "Lifestyle",     color: "#0f6b63", blurb: "Daily carry and outdoors" },
+  { slug: "electronics", name: "Electronics",   color: "#2c5aa0", blurb: "Audio, power and gadgets" },
+  { slug: "fashion",     name: "Fashion",       color: "#a8326b", blurb: "Clothing and accessories" },
+  { slug: "home",        name: "Home & Living", color: "#c27a12", blurb: "Kitchen, decor and light" }
+];
+
+let PRODUCTS = [];
+let ME = sessionStorage.getItem("shoplix_admin") === "1";
+
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const ok = r => { if (r.error) throw new Error(r.error.message); return r.data; };
+const safeUrl = u => /^(https?:\/\/[^\s"'<>]+|[\w\-./]+)$/.test(u) && !/^javascript/i.test(u);
+const toProd = r => ({ id: r.id, name: r.name, category: r.category, price: r.price, oldPrice: r.old_price || 0, rating: Number(r.rating || 4.8), sold: r.sold || 0, images: (r.images || []).filter(safeUrl), desc: r.description || "", details: r.details || [] });
+const toOrder = r => ({ no: r.no, demo: r.demo, name: r.name, phone: r.phone, city: r.city, address: r.address, items: r.items, total: Number(r.total), status: r.status, date: r.created_at });
+
+async function api(a, d){
+  switch (a) {
+    case "products": return { products: ok(await sb.from("products").select("*").order("id")).map(toProd) };
+    case "order": return ok(await sb.rpc("place_order", { p_name: d.name, p_phone: d.phone, p_city: d.city, p_address: d.address, p_items: d.items.map(i => ({ id: i.id, qty: i.qty })) }));
+    case "orders": return { orders: ok(await sb.from("orders").select("*").order("created_at", { ascending: false })).map(toOrder) };
+    case "order_status": ok(await sb.from("orders").update({ status: d.status }).eq("no", d.no)); return {};
+    case "order_delete": ok(await sb.from("orders").delete().eq("no", d.no)); return {};
+    case "product_save": {
+      const row = { name: d.name, category: d.category, price: d.price, old_price: d.oldPrice || 0, description: d.desc, details: d.details, images: d.images.filter(safeUrl) };
+      if (d.id) ok(await sb.from("products").update(row).eq("id", d.id)); else ok(await sb.from("products").insert(row));
+      return {};
+    }
+    case "product_delete": ok(await sb.from("products").delete().eq("id", d.id)); return {};
+    case "upload": {
+      const f = d.file;
+      if (f.size > 3 * 1024 * 1024) throw new Error("Choose an image under 3 MB.");
+      const path = crypto.randomUUID() + "." + (f.type.split("/")[1] || "jpg").replace("jpeg", "jpg");
+      ok(await sb.storage.from("product-images").upload(path, f, { contentType: f.type }));
+      return { url: sb.storage.from("product-images").getPublicUrl(path).data.publicUrl };
+    }
+  }
+}
+
+let lastOrders = null, listening = false;
+function listenRealtime(){
+  if (listening) return;
+  listening = true;
+  sb.channel("live-store")
+    .on("postgres_changes", { event: "INSERT", schema: "public", table: "orders" }, () => { if (ME) checkOrders(); })
+    .on("postgres_changes", { event: "*", schema: "public", table: "products" }, async () => {
+      try { await reload(); router(); } catch(e){}
+    })
+    .subscribe();
+}
+
+async function reload(){ PRODUCTS = (await api("products")).products; }
+function go(h){ if (location.hash === h) router(); else location.hash = h; }
+
+const $app = document.getElementById("app");
+const money = n => STORE.currency + Math.round(n).toLocaleString("en-US");
+const esc = s => String(s || "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const cat = slug => CATEGORIES.find(c => c.slug === slug) || CATEGORIES[0];
+const prod = id => PRODUCTS.find(p => Number(p.id) === Number(id));
+
+function placeholder(p, i){
+  const col = cat(p && p.category).color;
+  const label = p && p.name ? p.name.split(" ").slice(0,3).join(" ") : "Shoplix";
+  const svg = "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 600'><rect width='600' height='600' fill='" + col + "'/>" +
+    "<text x='300' y='285' font-family='Arial,sans-serif' font-size='30' fill='white' text-anchor='middle'>" + esc(label) + "</text>" +
+    "<text x='300' y='335' font-family='Arial,sans-serif' font-size='24' fill='white' fill-opacity='.7' text-anchor='middle'>Photo " + (i + 1) + "</text></svg>";
+  return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+}
+const images = p => (p && p.images && p.images.length) ? p.images : [0,1,2,3].map(i => placeholder(p, i));
+
+let memoryCart = [];
+function loadCart(){ try { return JSON.parse(localStorage.getItem("shoplix_cart")) || []; } catch(e){ return memoryCart; } }
+function saveCart(c){ memoryCart = c; try { localStorage.setItem("shoplix_cart", JSON.stringify(c)); } catch(e){} updateCount(); }
+function updateCount(){ document.getElementById("cartCount").textContent = loadCart().reduce((s,i) => s + i.qty, 0); }
+
+function toast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("show");
+  clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("show"), 1800);
+}
+
+function addToCart(id, qty){
+  qty = Math.max(1, Number(qty) || 1);
+  const cart = loadCart(), line = cart.find(i => Number(i.id) === Number(id));
+  if (line) line.qty += qty; else cart.push({ id: Number(id), qty });
+  saveCart(cart);
+  toast("Added to cart");
+}
+
+function card(p){
+  const off = p.oldPrice > p.price ? Math.round((1 - p.price / p.oldPrice) * 100) : 0;
+  return `<a class="card" href="#/product/${p.id}">
+    <div class="im">${off ? `<span class="badge">-${off}%</span>` : ""}<img src="${images(p)[0]}" alt="${esc(p.name)}" loading="lazy"></div>
+    <div class="bd"><h3>${esc(p.name)}</h3>
+      <div><span class="price">${money(p.price)}</span>${off ? `<span class="old">${money(p.oldPrice)}</span>` : ""}</div>
+      <div class="meta"><span class="star">★</span> ${p.rating} &middot; ${p.sold} sold</div></div></a>`;
+}
+
+function sortList(list, mode){
+  const l = list.slice();
+  if (mode === "low") l.sort((a,b) => a.price - b.price);
+  if (mode === "high") l.sort((a,b) => b.price - a.price);
+  if (mode === "rating") l.sort((a,b) => b.rating - a.rating);
+  return l;
+}
+
+function pageHome(){
+  $app.innerHTML = `
+    <section class="hero">
+      <div>
+        <h1>Everyday things, all in one place.</h1>
+        <p>Browse lifestyle, electronics, fashion and home essentials. Pay with cash when your order arrives.</p>
+        <div class="perks"><span><b>Cash on delivery</b></span><span><b>7-day</b> returns</span><span><b>Free delivery</b> over ${money(STORE.freeDeliveryOver)}</span></div>
+      </div>
+      <div class="cats">${CATEGORIES.map(c => `<a class="cat" style="--c:${c.color}" href="#/category/${c.slug}">${esc(c.name)}<small>${esc(c.blurb)}</small></a>`).join("")}</div>
+    </section>
+    <div class="head"><h2>All products</h2>${ME ? '<a class="btn buy mini" href="#/admin/new">+ Add product</a>' : ""}</div>
+    <div class="grid">${PRODUCTS.map(card).join("")}</div>`;
+}
+
+function pageCategory(slug, sort){
+  const c = CATEGORIES.find(x => x.slug === slug);
+  if (!c) return pageHome();
+  sort = sort || "default";
+  const list = sortList(PRODUCTS.filter(p => p.category === slug), sort);
+  $app.innerHTML = `
+    <div class="crumbs"><a href="#/">Home</a> / ${esc(c.name)}</div>
+    <div class="head"><h2>${esc(c.name)} <span class="meta">(${list.length} products)</span></h2>
+      <label>Sort <select id="sort"><option value="default">Featured</option><option value="low">Price: low to high</option><option value="high">Price: high to low</option><option value="rating">Top rated</option></select></label></div>
+    <div class="grid">${list.map(card).join("")}</div>`;
+  const s = document.getElementById("sort");
+  s.value = sort;
+  s.onchange = () => pageCategory(slug, s.value);
+}
+
+function pageSearch(q){
+  const term = decodeURIComponent(q || "").trim().toLowerCase();
+  const list = PRODUCTS.filter(p => (p.name + " " + p.desc + " " + cat(p.category).name).toLowerCase().includes(term));
+  $app.innerHTML = `
+    <div class="crumbs"><a href="#/">Home</a> / Search</div>
+    <div class="head"><h2>Results for “${esc(term)}” <span class="meta">(${list.length})</span></h2></div>
+    ${list.length ? `<div class="grid">${list.map(card).join("")}</div>` :
+      `<div class="box empty"><h3>No products found</h3><p>Try a different word, or browse a category.</p><a class="btn" href="#/">Back to shop</a></div>`}`;
+}
+
+function pageProduct(id){
+  const p = prod(id);
+  if (!p) return pageHome();
+  const imgs = images(p), c = cat(p.category);
+  const off = p.oldPrice > p.price ? Math.round((1 - p.price / p.oldPrice) * 100) : 0;
+  $app.innerHTML = `
+    <div class="crumbs"><a href="#/">Home</a> / <a href="#/category/${c.slug}">${esc(c.name)}</a> / ${esc(p.name)}</div>
+    <section class="prod">
+      <div class="gal">
+        <div class="main"><img id="mainImg" src="${imgs[0]}" alt="${esc(p.name)}"></div>
+        <div class="thumbs">${imgs.map((s,i) => `<button type="button" class="${i === 0 ? "on" : ""}" data-i="${i}"><img src="${s}" alt=""></button>`).join("")}</div>
+      </div>
+      <div class="info">
+        <h1>${esc(p.name)}</h1>
+        ${ME ? `<a class="btn alt mini" style="margin-bottom:8px" href="#/admin/edit/${p.id}">Edit this product</a>` : ""}
+        <div class="meta"><span class="star">★</span> ${p.rating} &middot; ${p.sold} sold</div>
+        <div style="margin-top:12px"><span class="price">${money(p.price)}</span>${off ? `<span class="old">${money(p.oldPrice)}</span> <span class="badge" style="position:static;display:inline-block;margin-left:6px">-${off}%</span>` : ""}</div>
+        <div class="row">
+          <span>Quantity</span>
+          <div class="qty"><button type="button" id="minus">−</button><input id="qty" type="number" min="1" value="1"><button type="button" id="plus">+</button></div>
+        </div>
+        <div class="row">
+          <button type="button" class="btn alt" id="add">Add to cart</button>
+          <button type="button" class="btn buy" id="buy">Buy now</button>
+        </div>
+        <h3>Description</h3>
+        <p class="d">${esc(p.desc)}</p>
+        <h3>Details</h3>
+        <ul>${(p.details || []).map(d => `<li>${esc(d)}</li>`).join("")}</ul>
+      </div>
+    </section>
+    <div class="head"><h2>More in ${esc(c.name)}</h2></div>
+    <div class="grid">${PRODUCTS.filter(x => x.category === p.category && x.id !== p.id).map(card).join("")}</div>`;
+
+  const q = document.getElementById("qty");
+  const getQty = () => Math.max(1, parseInt(q.value, 10) || 1);
+  document.getElementById("minus").onclick = () => q.value = Math.max(1, getQty() - 1);
+  document.getElementById("plus").onclick = () => q.value = getQty() + 1;
+  document.getElementById("add").onclick = () => addToCart(p.id, getQty());
+  document.getElementById("buy").onclick = () => { location.hash = `#/checkout/now/${p.id}/${getQty()}`; };
+  document.querySelectorAll(".thumbs button").forEach(b => b.onclick = () => {
+    document.getElementById("mainImg").src = imgs[b.dataset.i];
+    document.querySelectorAll(".thumbs button").forEach(x => x.classList.toggle("on", x === b));
+  });
+}
+
+function totals(items){
+  const sub = items.reduce((s,i) => s + prod(i.id).price * i.qty, 0);
+  const ship = !items.length || sub >= STORE.freeDeliveryOver ? 0 : STORE.deliveryFee;
+  return { sub, ship, total: sub + ship };
+}
+
+function pageCart(){
+  const cart = loadCart().filter(i => prod(i.id));
+  if (!cart.length){
+    $app.innerHTML = `<div class="box empty" style="margin-top:24px"><h2>Your cart is empty</h2><p>Add something you like and it will show up here.</p><a class="btn" href="#/">Start shopping</a></div>`;
+    return;
+  }
+  const t = totals(cart);
+  $app.innerHTML = `
+    <div class="head"><h2>Shopping cart</h2></div>
+    <div class="two">
+      <div class="box">${cart.map(i => { const p = prod(i.id); return `
+        <div class="line">
+          <img src="${images(p)[0]}" alt="">
+          <div><a href="#/product/${p.id}"><b>${esc(p.name)}</b></a><br><span class="meta">${money(p.price)} each</span><br>
+            <div class="qty" style="margin-top:6px"><button type="button" data-d="-1" data-id="${p.id}">−</button><input value="${i.qty}" readonly><button type="button" data-d="1" data-id="${p.id}">+</button></div>
+            <button type="button" class="x" data-rm="${p.id}">Remove</button></div>
+          <b>${money(p.price * i.qty)}</b>
+        </div>`; }).join("")}</div>
+      <div class="box sum">
+        <h3 style="margin-bottom:8px">Order summary</h3>
+        <div><span>Subtotal</span><span>${money(t.sub)}</span></div>
+        <div><span>Delivery</span><span>${t.ship ? money(t.ship) : "Free"}</span></div>
+        <div class="tot"><span>Total</span><span>${money(t.total)}</span></div>
+        <a class="btn buy" style="display:block;margin-top:14px" href="#/checkout">Checkout</a>
+      </div>
+    </div>`;
+  $app.querySelectorAll("[data-d]").forEach(b => b.onclick = () => {
+    const c = loadCart(), l = c.find(x => Number(x.id) === Number(b.dataset.id));
+    l.qty = Math.max(1, l.qty + Number(b.dataset.d)); saveCart(c); pageCart();
+  });
+  $app.querySelectorAll("[data-rm]").forEach(b => b.onclick = () => {
+    saveCart(loadCart().filter(x => Number(x.id) !== Number(b.dataset.rm))); pageCart();
+  });
+}
+
+function pageCheckout(now){
+  const items = now ? [{ id: Number(now.id), qty: Math.max(1, Number(now.qty) || 1) }].filter(i => prod(i.id)) : loadCart().filter(i => prod(i.id));
+  if (!items.length) return pageCart();
+  const t = totals(items);
+  $app.innerHTML = `
+    <div class="head"><h2>Checkout</h2></div>
+    <div class="two">
+      <form class="box f" id="orderForm">
+        <h3>Delivery details</h3>
+        <label>Full name<input name="name" required></label>
+        <label>Phone number<input name="phone" type="tel" required pattern="[0-9+\\- ]{8,15}" placeholder="01XXXXXXXXX"></label>
+        <label>City<input name="city" required></label>
+        <label>Full address<textarea name="address" rows="3" required></textarea></label>
+        <h3>Payment</h3>
+        <div class="pay"><input type="radio" checked disabled> Cash on delivery</div>
+        <div class="pay off"><input type="radio" disabled> bKash / Nagad / card (coming soon)</div>
+        <button class="btn buy" type="submit">Place order &middot; ${money(t.total)}</button>
+      </form>
+      <div class="box sum">
+        <h3 style="margin-bottom:8px">Your items</h3>
+        ${items.map(i => { const p = prod(i.id); return `<div><span>${esc(p.name)} × ${i.qty}</span><span>${money(p.price * i.qty)}</span></div>`; }).join("")}
+        <div style="border-top:1px solid var(--line);margin-top:6px"><span>Subtotal</span><span>${money(t.sub)}</span></div>
+        <div><span>Delivery</span><span>${t.ship ? money(t.ship) : "Free"}</span></div>
+        <div class="tot"><span>Total</span><span>${money(t.total)}</span></div>
+      </div>
+    </div>`;
+  document.getElementById("orderForm").onsubmit = async e => {
+    e.preventDefault();
+    const f = Object.fromEntries(new FormData(e.target)), btn = e.target.querySelector("button");
+    btn.disabled = true;
+    try {
+      const r = await api("order", { ...f, items });
+      sessionStorage.setItem("last_order", JSON.stringify({ ...r, name: f.name, city: f.city, address: f.address }));
+      if (!now) saveCart([]);
+      location.hash = "#/done/" + r.no;
+    } catch(err){ toast(err.message); btn.disabled = false; }
+  };
+}
+
+function pageDone(no){
+  let o = null; try { o = JSON.parse(sessionStorage.getItem("last_order")); } catch(e){}
+  if (!o || o.no !== no) return pageHome();
+  $app.innerHTML = `<div class="box empty" style="margin-top:24px">
+    <h2>Thank you, ${esc(o.name)}. Your order is placed.</h2>
+    <p>Order number <b>${esc(o.no)}</b>. Pay ${money(o.total)} in cash on delivery to ${esc(o.address)}, ${esc(o.city)}.</p>
+    <a class="btn" href="#/">Continue shopping</a></div>`;
+}
+
+/* Admin (Password Only) */
+const adminTabs = a => `<div class="tabs"><a class="btn mini ${a === "products" ? "" : "alt"}" href="#/admin">Products</a><a class="btn mini ${a === "orders" ? "" : "alt"}" href="#/admin/orders">Orders</a></div>`;
+
+function renderBanner(){
+  const b = document.getElementById("adminBar");
+  b.innerHTML = ME ? `<div class="adminbar"><div class="wrap"><span>Admin mode active</span><span><a href="#/admin/new">+ Add product</a><a href="#/admin">Products</a><a href="#/admin/orders">Orders<span id="ordBadge"></span></a><button type="button" id="lo">Log out</button></span></div></div>` : "";
+  if (ME) {
+    checkOrders();
+    document.getElementById("lo").onclick = () => { sessionStorage.removeItem("shoplix_admin"); ME = false; renderBanner(); go("#/"); };
+  }
+}
+
+async function checkOrders(){
+  try {
+    const { orders } = await api("orders");
+    const pending = orders.filter(o => (o.status || "").toLowerCase() === "pending").length;
+    if (lastOrders !== null && orders.length > lastOrders) toast("New order received");
+    lastOrders = orders.length;
+    const el = document.getElementById("ordBadge"); if (el) el.textContent = pending ? " (" + pending + ")" : "";
+  } catch(e){}
+}
+
+function pageAdmin(sub, id){
+  if (!ME) return adminAuth();
+  if (sub === "orders") return adminOrders();
+  if (sub === "new") return adminEdit(null);
+  if (sub === "edit") return prod(id) ? adminEdit(prod(id)) : adminProducts();
+  adminProducts();
+}
+
+function adminAuth(){
+  $app.innerHTML = `<form class="box f" id="af" style="max-width:380px;margin:32px auto">
+    <h2>Admin login</h2>
+    <label>Password<input name="password" type="password" required placeholder="Enter admin password"></label>
+    <button class="btn" type="submit">Log in</button>
+  </form>`;
+  document.getElementById("af").onsubmit = e => {
+    e.preventDefault();
+    const pw = new FormData(e.target).get("password");
+    if (pw === ADMIN_PASSWORD) {
+      sessionStorage.setItem("shoplix_admin", "1");
+      ME = true;
+      renderBanner();
+      go("#/admin");
+    } else {
+      toast("Wrong password");
+    }
+  };
+}
+
+function adminProducts(){
+  $app.innerHTML = adminTabs("products") + `<div class="head"><h2>Products (${PRODUCTS.length})</h2><a class="btn buy mini" href="#/admin/new">Add product</a></div>
+    <div class="box scroll"><table class="tbl"><tr><th></th><th>Name</th><th>Category</th><th>Price</th><th></th></tr>
+    ${PRODUCTS.map(p => `<tr><td><img src="${images(p)[0]}" alt=""></td><td>${esc(p.name)}</td><td>${esc(cat(p.category).name)}</td><td>${money(p.price)}</td>
+      <td style="white-space:nowrap"><a class="btn alt mini" href="#/admin/edit/${p.id}">Edit</a> <button type="button" class="btn alt mini" data-del="${p.id}">Delete</button></td></tr>`).join("")}</table></div>`;
+  $app.querySelectorAll("[data-del]").forEach(b => b.onclick = async () => {
+    if (!confirm("Delete this product?")) return;
+    try { await api("product_delete", { id: Number(b.dataset.del) }); await reload(); toast("Product deleted"); adminProducts(); } catch(err){ toast(err.message); }
+  });
+}
+
+function adminEdit(p){
+  const curImgs = p ? images(p) : [];
+  $app.innerHTML = adminTabs("products") + `<form class="box f" id="pf" style="max-width:620px">
+    <h2>${p ? "Edit product" : "Add product"}</h2>
+    <label>Product name<input name="name" required value="${p ? esc(p.name) : ""}"></label>
+    <label>Category<select name="category">${CATEGORIES.map(c => `<option value="${c.slug}" ${p && p.category === c.slug ? "selected" : ""}>${esc(c.name)}</option>`).join("")}</select></label>
+    <label>Price (${STORE.currency})<input name="price" type="number" min="1" step="any" required value="${p ? p.price : ""}"></label>
+    <label>Old price (${STORE.currency}, optional)<input name="oldPrice" type="number" min="0" step="any" value="${p && p.oldPrice ? p.oldPrice : ""}"></label>
+    <label>Image URLs (one per line)<textarea name="imagesText" rows="3" placeholder="https://...">${p && p.images ? p.images.join("\n") : ""}</textarea></label>
+    <label>Or upload a photo (max 3 MB)<input type="file" id="imgFile" accept="image/*"></label>
+    <div id="imgPreview" class="thumbs">${curImgs.map(u => `<button type="button"><img src="${esc(u)}" alt=""></button>`).join("")}</div>
+    <label>Description<textarea name="desc" rows="3">${p ? esc(p.desc) : ""}</textarea></label>
+    <label>Details (one bullet per line)<textarea name="detailsText" rows="3">${p && p.details ? p.details.join("\n") : ""}</textarea></label>
+    <div class="row" style="margin:6px 0 0">
+      <button class="btn buy" type="submit">Save product</button>
+      <a class="btn alt" href="#/admin">Cancel</a>
+    </div>
+  </form>`;
+
+  const form = document.getElementById("pf");
+  document.getElementById("imgFile").onchange = async e => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    try {
+      toast("Uploading photo...");
+      const { url } = await api("upload", { file });
+      const ta = form.elements.imagesText;
+      ta.value = (ta.value ? ta.value.trim() + "\n" : "") + url;
+      toast("Photo uploaded");
+    } catch(err){ toast(err.message); }
+  };
+
+  form.onsubmit = async e => {
+    e.preventDefault();
+    const f = new FormData(form);
+    const imgs = String(f.get("imagesText") || "").split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+    const details = String(f.get("detailsText") || "").split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+    try {
+      await api("product_save", {
+        id: p ? p.id : null,
+        name: String(f.get("name") || "").trim(),
+        category: String(f.get("category") || "lifestyle"),
+        price: Number(f.get("price")),
+        oldPrice: Number(f.get("oldPrice") || 0),
+        desc: String(f.get("desc") || "").trim(),
+        details,
+        images: imgs
+      });
+      await reload();
+      toast(p ? "Product updated" : "Product added");
+      go("#/admin");
+    } catch(err){ toast(err.message); }
+  };
+}
+
+async function adminOrders(){
+  $app.innerHTML = adminTabs("orders") + `<div class="head"><h2>Orders</h2></div><div class="box"><p class="meta">Loading orders...</p></div>`;
+  try {
+    const { orders } = await api("orders");
+    lastOrders = orders.length;
+    const statuses = ["Pending", "Confirmed", "Shipped", "Delivered", "Cancelled"];
+    $app.innerHTML = adminTabs("orders") + `<div class="head"><h2>Orders (${orders.length})</h2></div>
+      <div class="box scroll"><table class="tbl">
+        <tr><th>Order</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th><th></th></tr>
+        ${orders.length ? orders.map(o => `<tr>
+          <td><b>${esc(o.no)}</b>${o.demo ? '<span class="tag">Demo</span>' : ""}<div class="meta">${esc(o.date ? new Date(o.date).toLocaleString() : "")}</div></td>
+          <td><b>${esc(o.name)}</b><br><span class="meta">${esc(o.phone)} &middot; ${esc(o.city)}</span><div class="meta">${esc(o.address)}</div></td>
+          <td>${(Array.isArray(o.items) ? o.items : []).map(i => `${esc(i.name || ("#" + i.id))} × ${i.qty}`).join("<br>")}</td>
+          <td><b>${money(o.total)}</b></td>
+          <td><select data-st="${esc(o.no)}">${statuses.map(s => `<option value="${s}" ${o.status === s ? "selected" : ""}>${s}</option>`).join("")}</select></td>
+          <td><button type="button" class="btn alt mini" data-odel="${esc(o.no)}">Delete</button></td>
+        </tr>`).join("") : `<tr><td colspan="6" class="meta">No orders yet.</td></tr>`}
+      </table></div>`;
+
+    $app.querySelectorAll("[data-st]").forEach(sel => sel.onchange = async () => {
+      try { await api("order_status", { no: sel.dataset.st, status: sel.value }); toast("Status updated"); checkOrders(); }
+      catch(err){ toast(err.message); }
+    });
+    $app.querySelectorAll("[data-odel]").forEach(b => b.onclick = async () => {
+      if (!confirm("Delete this order?")) return;
+      try { await api("order_delete", { no: b.dataset.odel }); toast("Order deleted"); adminOrders(); }
+      catch(err){ toast(err.message); }
+    });
+  } catch(err){
+    $app.innerHTML = adminTabs("orders") + `<div class="box"><p class="meta">Could not load orders: ${esc(err.message)}</p></div>`;
+  }
+}
+
+function renderNav(activeSlug){
+  document.getElementById("nav").innerHTML = `<a href="#/" class="${!activeSlug ? "on" : ""}">All</a>` +
+    CATEGORIES.map(c => `<a href="#/category/${c.slug}" class="${activeSlug === c.slug ? "on" : ""}">${esc(c.name)}</a>`).join("");
+}
+
+function router(){
+  const raw = (location.hash || "#/").replace(/^#/, "");
+  const parts = raw.split("/").filter(Boolean);
+  const head = parts[0] || "";
+  renderNav(head === "category" ? parts[1] : "");
+
+  if (!head) return pageHome();
+  if (head === "category") return pageCategory(parts[1], parts[2]);
+  if (head === "search") return pageSearch(parts.slice(1).join("/"));
+  if (head === "product") return pageProduct(parts[1]);
+  if (head === "cart") return pageCart();
+  if (head === "checkout" && parts[1] === "now") return pageCheckout({ id: parts[2], qty: parts[3] });
+  if (head === "checkout") return pageCheckout(null);
+  if (head === "done") return pageDone(parts[1]);
+  if (head === "admin") return pageAdmin(parts[1], parts[2]);
+  pageHome();
+}
+
+document.getElementById("searchForm").onsubmit = e => {
+  e.preventDefault();
+  const val = document.getElementById("q").value.trim();
+  location.hash = val ? "#/search/" + encodeURIComponent(val) : "#/";
+};
+
+window.addEventListener("hashchange", router);
+
+(async function init(){
+  updateCount();
+  try { await reload(); } catch(err){ toast(err.message); }
+  listenRealtime();
+  renderBanner();
+  router();
+})();
+</script>
+</body>
+</html>
